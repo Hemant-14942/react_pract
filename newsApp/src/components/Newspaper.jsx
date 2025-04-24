@@ -6,7 +6,7 @@ const Newspaper = () => {
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState([]);
 
-  const apiKey = "6f538b2b0358a5845800013546774dfe";
+  const apiKey = "c0481d813e90a5fc65d88199bf8c30f2";
 
   const getSearch = async () => {
     try {
