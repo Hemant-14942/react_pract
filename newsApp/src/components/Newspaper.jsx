@@ -5,7 +5,8 @@ import axios from 'axios';
 const Newspaper = () => {
   const [search, setSearch] = useState("india");
   const [article, setArticle] = useState(null);
-    const apiKey = "1adf16b3378242f19be06d3dfab570bf";
+    const apiKey = "1c6241767e8345498bdf2dad116accf7";
+    // 1c6241767e8345498bdf2dad116accf7
 
     const getSearch = async()=>{
       try {
