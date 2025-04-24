@@ -1,100 +1,79 @@
-import React, { useEffect, useState } from 'react'
-import Cards from './Cards';
-import axios from 'axios';
+import React, { useState } from "react";
+import Cards from "./Cards";
+import axios from "axios";
 
 const Newspaper = () => {
-  const [search, setSearch] = useState("india");
-  const [article, setArticle] = useState(null);
-    const apiKey = "1c6241767e8345498bdf2dad116accf7";
-    // 1c6241767e8345498bdf2dad116accf7
+  const [search, setSearch] = useState("");
+  const [articles, setArticles] = useState([]);
 
-    const getSearch = async()=>{
-      try {
-        if(search){
-           const resp = await axios.get(
-             `https://newsapi.org/v2/everything?q=${search}&apiKey=${apiKey}`
-           );
-          //  console.log(resp);
-           
-          //  const data = await resp.json();/
-           setArticle(resp.data.articles);
-           console.log(resp.data.articles);
-           console.log(search);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-       
-        
-    }
-    const handleChange = (e) => {
-        // console.log(e.target.value)
-        setSearch(e.target.value);
-    }
+  const apiKey = "6f538b2b0358a5845800013546774dfe";
 
-    useEffect(()=>{
-      getSearch();
-    },[search])
-
-    const handleClick = (e) => {
-        console.log(e.target.innerText);
-        setSearch(e.target.innerText);
+  const getSearch = async () => {
+    try {
+      const resp = await axios.get(
+        `http://api.mediastack.com/v1/news?access_key=${apiKey}&keywords=${search}&languages=en`
+      );
+      setArticles(resp.data.data);
+    } catch (error) {
+      console.error("Error fetching news:", error);
     }
+  };
+
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleClick = (e) => {
+    const keyword = e.target.innerText;
+    setSearch(keyword);
+    getSearch();
+  };
+
   return (
-    <>
-      <nav className="bg-amber-200 px-14 py-2  flex justify-between items-center">
-        <h1 className="text-5xl">News !</h1>
-        <div className="search flex justify-center items-center gap-4">
+    <div className="min-h-screen bg-zinc-900 text-white font-sans">
+      <nav className="bg-zinc-800 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shadow">
+        <h1 className="text-4xl font-bold text-amber-400">🗞Newsify</h1>
+        <div className="flex gap-4">
           <input
-            className="outilne-none border-2 text-2xl border-blue-500"
+            className="bg-zinc-700 text-white border border-amber-400 px-4 py-2 rounded-md outline-none"
             type="text"
-            onChange={(e) => handleChange(e)}
+            placeholder="Search news..."
+            onChange={handleChange}
           />
           <button
-            type="button"
             onClick={getSearch}
-            className="p-1 bg-blue-700 text-amber-100"
+            className="bg-amber-400 text-zinc-900 px-5 py-2 rounded-md font-semibold hover:bg-amber-500 transition"
           >
             Search
           </button>
         </div>
       </nav>
-      <p className="text-center text-3xl">get trending news here !</p>
-      <div className="btn text-center mt-12">
-        <button
-          className="p-2 text-white uppercase rounded-xl btn bg-blue-700 mx-4 cursor-pointer"
-          onClick={(e) => handleClick(e)}
-        >
-          sports
-        </button>
-        <button
-          className="p-2 text-white uppercase rounded-xl btn bg-blue-700 mx-4 cursor-pointer"
-          onClick={(e) => handleClick(e)}
-        >
-          politics
-        </button>
-        <button
-          className="p-2 text-white uppercase rounded-xl btn bg-blue-700 mx-4 cursor-pointer"
-          onClick={(e) => handleClick(e)}
-        >
-          music
-        </button>
-        <button
-          className="p-2 text-white uppercase rounded-xl btn bg-blue-700 mx-4 cursor-pointer"
-          onClick={(e) => handleClick(e)}
-        >
-          india
-        </button>
-        <button
-          className="p-2 text-white uppercase rounded-xl btn bg-blue-700 mx-4 cursor-pointer"
-          onClick={(e) => handleClick(e)}
-        >
-          car
-        </button>
+
+      <p className="text-center text-2xl mt-6 text-gray-300">
+        Get trending news here!
+      </p>
+
+      <div className="text-center mt-8 flex flex-wrap justify-center gap-4">
+        {["sports", "politics", "music", "india", "car"].map((topic, idx) => (
+          <button
+            key={idx}
+            className="bg-amber-400 text-zinc-900 px-5 py-2 rounded-full uppercase text-sm font-semibold hover:bg-amber-500 transition"
+            onClick={handleClick}
+          >
+            {topic}
+          </button>
+        ))}
       </div>
-      {article ? <Cards data={article} /> : null}
-    </>
+
+      {articles.length > 0 ? (
+        <Cards data={articles} />
+      ) : (
+        <p className="text-center mt-16 text-gray-500">
+          No news to display. Try searching!
+        </p>
+      )}
+    </div>
   );
-}
+};
 
 export default Newspaper;
