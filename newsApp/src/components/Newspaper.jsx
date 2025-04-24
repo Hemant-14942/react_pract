@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Cards from './Cards';
+import axios from 'axios';
 
 const Newspaper = () => {
   const [search, setSearch] = useState("india");
@@ -9,12 +10,14 @@ const Newspaper = () => {
     const getSearch = async()=>{
       try {
         if(search){
-           const resp = await fetch(
+           const resp = await axios.get(
              `https://newsapi.org/v2/everything?q=${search}&apiKey=${apiKey}`
            );
-           const data = await resp.json();
-           setArticle(data.articles);
-           console.log(data.articles);
+          //  console.log(resp);
+           
+          //  const data = await resp.json();/
+           setArticle(resp.data.articles);
+           console.log(resp.data.articles);
            console.log(search);
         }
       } catch (error) {
